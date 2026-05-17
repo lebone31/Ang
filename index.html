@@ -8,78 +8,77 @@
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(to top, #0f0f1a, #1a1a2e);
+  background: radial-gradient(circle at top, #111, #000);
   overflow: hidden;
   font-family: Arial;
   color: white;
-  text-align: center;
 }
 
-/* TITLE */
-h1 {
-  margin-top: 30px;
-  font-size: 28px;
-  font-weight: 600;
-}
-
-/* CENTER WRAPPER */
+/* CENTER EVERYTHING */
 .center {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
 }
 
-/* CAKE */
+/* TITLE */
+h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+/* CAKE (BIG + CENTERED) */
 .cake {
-  width: 220px;
-  height: 140px;
-  background: #ffffff;
-  border-radius: 20px;
+  width: 320px;
+  height: 200px;
+  background: #000;
+  border-radius: 25px;
   position: relative;
   margin: auto;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  box-shadow: 0 30px 80px rgba(255,255,255,0.08);
 }
 
-/* frosting */
+/* WHITE FROSTING */
 .cake::before {
   content: "";
   position: absolute;
-  top: -20px;
-  left: 10px;
-  right: 10px;
-  height: 40px;
-  background: #ffe6f0;
+  top: -30px;
+  left: 15px;
+  right: 15px;
+  height: 60px;
+  background: #fff;
   border-radius: 50%;
 }
 
-/* candles */
+/* CANDLES */
 .candle {
-  width: 8px;
-  height: 45px;
-  background: #ff6b6b;
+  width: 10px;
+  height: 70px;
+  background: #fff;
   position: absolute;
-  top: -50px;
-  border-radius: 4px;
+  top: -80px;
+  border-radius: 5px;
 }
 
-.c1 { left: 60px; }
-.c2 { left: 105px; }
-.c3 { left: 150px; }
+.c1 { left: 80px; }
+.c2 { left: 150px; }
+.c3 { left: 220px; }
 
-/* flame */
+/* FLAME */
 .flame {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: orange;
   border-radius: 50%;
   position: absolute;
-  top: -12px;
+  top: -15px;
   left: -1px;
-  box-shadow: 0 0 15px orange;
+  box-shadow: 0 0 20px orange;
 }
 
-/* balloons */
+/* BALLOONS */
 .balloon {
   position: absolute;
   width: 20px;
@@ -87,28 +86,28 @@ h1 {
   border-radius: 50%;
   bottom: -100px;
   animation: float 8s linear infinite;
+  opacity: 0.7;
 }
 
 @keyframes float {
-  to {
-    transform: translateY(-110vh);
-  }
+  to { transform: translateY(-120vh); }
 }
 
-/* hint text */
+/* hint */
 p {
-  margin-top: 10px;
   opacity: 0.7;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎉 Make a Wish 🎉</h1>
-<p>Click the cake to blow the candles 💨</p>
-
 <div class="center">
+
+  <h1>🎉 Make a Wish 🎉</h1>
+  <p>Click the cake OR blow into mic 💨</p>
+
   <div class="cake" onclick="blowCandles()">
 
     <div class="candle c1"><div class="flame"></div></div>
@@ -116,26 +115,54 @@ p {
     <div class="candle c3"><div class="flame"></div></div>
 
   </div>
+
 </div>
 
 <script>
 
+let flames = document.querySelectorAll(".flame");
+
 /* BALLOONS */
-for (let i = 0; i < 15; i++) {
+for (let i = 0; i < 18; i++) {
   let b = document.createElement("div");
   b.className = "balloon";
   b.style.left = Math.random() * 100 + "%";
-  b.style.background = ["#ff6b6b","#ffd93d","#6bcB77","#4d96ff","#c77dff"][i % 5];
-  b.style.animationDuration = (5 + Math.random() * 5) + "s";
+  b.style.background = ["#fff","#ccc","#999","#000"][i % 4];
+  b.style.animationDuration = (5 + Math.random() * 6) + "s";
   document.body.appendChild(b);
 }
 
-/* BLOW CANDLES */
+/* CLICK BLOW */
 function blowCandles() {
-  document.querySelectorAll(".flame").forEach(f => {
-    f.style.opacity = "0";
-  });
+  flames.forEach(f => f.style.opacity = "0");
 }
+
+/* MIC BLOW */
+navigator.mediaDevices.getUserMedia({ audio: true })
+.then(stream => {
+  const audioCtx = new AudioContext();
+  const mic = audioCtx.createMediaStreamSource(stream);
+  const analyser = audioCtx.createAnalyser();
+
+  mic.connect(analyser);
+  const data = new Uint8Array(analyser.frequencyBinCount);
+
+  function detect() {
+    analyser.getByteFrequencyData(data);
+    let volume = data.reduce((a,b)=>a+b) / data.length;
+
+    if (volume > 25) {
+      flames.forEach(f => f.style.opacity = "0");
+    }
+
+    requestAnimationFrame(detect);
+  }
+
+  detect();
+})
+.catch(() => {
+  console.log("Mic blocked");
+});
 
 </script>
 
