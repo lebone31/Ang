@@ -8,13 +8,13 @@
 body {
   margin: 0;
   height: 100vh;
-  background: radial-gradient(circle at top, #111, #000);
-  overflow: hidden;
-  font-family: Arial;
+  background: #000;
   color: white;
+  font-family: Arial;
+  overflow: hidden;
 }
 
-/* CENTER EVERYTHING */
+/* CENTER */
 .center {
   position: absolute;
   top: 50%;
@@ -25,22 +25,28 @@ body {
 
 /* TITLE */
 h1 {
-  font-size: 28px;
+  font-size: 30px;
   margin-bottom: 10px;
+  font-weight: 500;
 }
 
-/* CAKE (BIG + CENTERED) */
+p {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+/* CAKE */
 .cake {
-  width: 320px;
-  height: 200px;
-  background: #000;
+  width: 340px;
+  height: 210px;
+  background: #111;
   border-radius: 25px;
+  margin: 30px auto;
   position: relative;
-  margin: auto;
-  box-shadow: 0 30px 80px rgba(255,255,255,0.08);
+  box-shadow: 0 20px 60px rgba(255,255,255,0.08);
 }
 
-/* WHITE FROSTING */
+/* frosting */
 .cake::before {
   content: "";
   position: absolute;
@@ -48,25 +54,24 @@ h1 {
   left: 15px;
   right: 15px;
   height: 60px;
-  background: #fff;
+  background: white;
   border-radius: 50%;
 }
 
-/* CANDLES */
+/* candles */
 .candle {
   width: 10px;
   height: 70px;
-  background: #fff;
+  background: white;
   position: absolute;
   top: -80px;
-  border-radius: 5px;
 }
 
 .c1 { left: 80px; }
-.c2 { left: 150px; }
-.c3 { left: 220px; }
+.c2 { left: 160px; }
+.c3 { left: 240px; }
 
-/* FLAME */
+/* flame */
 .flame {
   width: 12px;
   height: 12px;
@@ -75,7 +80,8 @@ h1 {
   position: absolute;
   top: -15px;
   left: -1px;
-  box-shadow: 0 0 20px orange;
+  box-shadow: 0 0 15px orange;
+  transition: 0.3s;
 }
 
 /* BALLOONS */
@@ -85,18 +91,14 @@ h1 {
   height: 28px;
   border-radius: 50%;
   bottom: -100px;
-  animation: float 8s linear infinite;
+  animation: float 10s linear infinite;
   opacity: 0.7;
 }
 
 @keyframes float {
-  to { transform: translateY(-120vh); }
-}
-
-/* hint */
-p {
-  opacity: 0.7;
-  margin-top: 10px;
+  to {
+    transform: translateY(-120vh);
+  }
 }
 </style>
 </head>
@@ -105,32 +107,20 @@ p {
 
 <div class="center">
 
-  <h1>🎉 Make a Wish 🎉</h1>
-  <p>Click the cake OR blow into mic 💨</p>
+<h1>🎉 Make a Wish 🎉</h1>
+<p>Click the cake or blow into mic</p>
 
-  <div class="cake" onclick="blowCandles()">
-
-    <div class="candle c1"><div class="flame"></div></div>
-    <div class="candle c2"><div class="flame"></div></div>
-    <div class="candle c3"><div class="flame"></div></div>
-
-  </div>
+<div class="cake" onclick="blowCandles()">
+  <div class="candle c1"><div class="flame"></div></div>
+  <div class="candle c2"><div class="flame"></div></div>
+  <div class="candle c3"><div class="flame"></div></div>
+</div>
 
 </div>
 
 <script>
 
 let flames = document.querySelectorAll(".flame");
-
-/* BALLOONS */
-for (let i = 0; i < 18; i++) {
-  let b = document.createElement("div");
-  b.className = "balloon";
-  b.style.left = Math.random() * 100 + "%";
-  b.style.background = ["#fff","#ccc","#999","#000"][i % 4];
-  b.style.animationDuration = (5 + Math.random() * 6) + "s";
-  document.body.appendChild(b);
-}
 
 /* CLICK BLOW */
 function blowCandles() {
@@ -159,10 +149,17 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   }
 
   detect();
-})
-.catch(() => {
-  console.log("Mic blocked");
 });
+
+/* BALLOONS */
+for (let i = 0; i < 15; i++) {
+  let b = document.createElement("div");
+  b.className = "balloon";
+  b.style.left = Math.random() * 100 + "%";
+  b.style.background = ["#fff","#aaa","#666"][i % 3];
+  b.style.animationDuration = (6 + Math.random() * 6) + "s";
+  document.body.appendChild(b);
+}
 
 </script>
 
