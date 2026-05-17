@@ -1,1 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Make a Wish 🎂</title>
 
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(to top, #0f0f1a, #1a1a2e);
+  overflow: hidden;
+  font-family: Arial;
+  color: white;
+  text-align: center;
+}
+
+/* TITLE */
+h1 {
+  margin-top: 30px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* CENTER WRAPPER */
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* CAKE */
+.cake {
+  width: 220px;
+  height: 140px;
+  background: #ffffff;
+  border-radius: 20px;
+  position: relative;
+  margin: auto;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* frosting */
+.cake::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  right: 10px;
+  height: 40px;
+  background: #ffe6f0;
+  border-radius: 50%;
+}
+
+/* candles */
+.candle {
+  width: 8px;
+  height: 45px;
+  background: #ff6b6b;
+  position: absolute;
+  top: -50px;
+  border-radius: 4px;
+}
+
+.c1 { left: 60px; }
+.c2 { left: 105px; }
+.c3 { left: 150px; }
+
+/* flame */
+.flame {
+  width: 10px;
+  height: 10px;
+  background: orange;
+  border-radius: 50%;
+  position: absolute;
+  top: -12px;
+  left: -1px;
+  box-shadow: 0 0 15px orange;
+}
+
+/* balloons */
+.balloon {
+  position: absolute;
+  width: 20px;
+  height: 28px;
+  border-radius: 50%;
+  bottom: -100px;
+  animation: float 8s linear infinite;
+}
+
+@keyframes float {
+  to {
+    transform: translateY(-110vh);
+  }
+}
+
+/* hint text */
+p {
+  margin-top: 10px;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎉 Make a Wish 🎉</h1>
+<p>Click the cake to blow the candles 💨</p>
+
+<div class="center">
+  <div class="cake" onclick="blowCandles()">
+
+    <div class="candle c1"><div class="flame"></div></div>
+    <div class="candle c2"><div class="flame"></div></div>
+    <div class="candle c3"><div class="flame"></div></div>
+
+  </div>
+</div>
+
+<script>
+
+/* BALLOONS */
+for (let i = 0; i < 15; i++) {
+  let b = document.createElement("div");
+  b.className = "balloon";
+  b.style.left = Math.random() * 100 + "%";
+  b.style.background = ["#ff6b6b","#ffd93d","#6bcB77","#4d96ff","#c77dff"][i % 5];
+  b.style.animationDuration = (5 + Math.random() * 5) + "s";
+  document.body.appendChild(b);
+}
+
+/* BLOW CANDLES */
+function blowCandles() {
+  document.querySelectorAll(".flame").forEach(f => {
+    f.style.opacity = "0";
+  });
+}
+
+</script>
+
+</body>
+</html>
