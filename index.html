@@ -9,12 +9,12 @@ body {
   margin: 0;
   height: 100vh;
   background: #000;
-  color: white;
   font-family: Arial;
+  color: white;
   overflow: hidden;
 }
 
-/* CENTER */
+/* CENTER EVERYTHING */
 .center {
   position: absolute;
   top: 50%;
@@ -27,51 +27,51 @@ body {
 h1 {
   font-size: 30px;
   margin-bottom: 10px;
-  font-weight: 500;
 }
 
 p {
-  opacity: 0.7;
+  opacity: 0.6;
   font-size: 14px;
 }
 
-/* CAKE */
+/* BIG CENTER CAKE */
 .cake {
-  width: 340px;
-  height: 210px;
+  width: 360px;
+  height: 230px;
   background: #111;
   border-radius: 25px;
   margin: 30px auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(255,255,255,0.08);
+  box-shadow: 0 25px 80px rgba(255,255,255,0.08);
 }
 
-/* frosting */
+/* WHITE FROSTING */
 .cake::before {
   content: "";
   position: absolute;
   top: -30px;
   left: 15px;
   right: 15px;
-  height: 60px;
+  height: 65px;
   background: white;
   border-radius: 50%;
 }
 
-/* candles */
+/* CANDLES */
 .candle {
   width: 10px;
-  height: 70px;
+  height: 75px;
   background: white;
   position: absolute;
-  top: -80px;
+  top: -85px;
+  border-radius: 5px;
 }
 
-.c1 { left: 80px; }
-.c2 { left: 160px; }
-.c3 { left: 240px; }
+.c1 { left: 90px; }
+.c2 { left: 170px; }
+.c3 { left: 250px; }
 
-/* flame */
+/* FLAMES */
 .flame {
   width: 12px;
   height: 12px;
@@ -80,8 +80,7 @@ p {
   position: absolute;
   top: -15px;
   left: -1px;
-  box-shadow: 0 0 15px orange;
-  transition: 0.3s;
+  box-shadow: 0 0 18px orange;
 }
 
 /* BALLOONS */
@@ -91,7 +90,7 @@ p {
   height: 28px;
   border-radius: 50%;
   bottom: -100px;
-  animation: float 10s linear infinite;
+  animation: float 9s linear infinite;
   opacity: 0.7;
 }
 
@@ -107,14 +106,14 @@ p {
 
 <div class="center">
 
-<h1>🎉 Make a Wish 🎉</h1>
-<p>Click the cake or blow into mic</p>
+  <h1>🎉 Make a Wish 🎉</h1>
+  <p>Blow into your mic to blow out the candles 💨</p>
 
-<div class="cake" onclick="blowCandles()">
-  <div class="candle c1"><div class="flame"></div></div>
-  <div class="candle c2"><div class="flame"></div></div>
-  <div class="candle c3"><div class="flame"></div></div>
-</div>
+  <div class="cake">
+    <div class="candle c1"><div class="flame"></div></div>
+    <div class="candle c2"><div class="flame"></div></div>
+    <div class="candle c3"><div class="flame"></div></div>
+  </div>
 
 </div>
 
@@ -122,12 +121,7 @@ p {
 
 let flames = document.querySelectorAll(".flame");
 
-/* CLICK BLOW */
-function blowCandles() {
-  flames.forEach(f => f.style.opacity = "0");
-}
-
-/* MIC BLOW */
+/* MIC BLOW (ONLY WAY) */
 navigator.mediaDevices.getUserMedia({ audio: true })
 .then(stream => {
   const audioCtx = new AudioContext();
@@ -135,24 +129,33 @@ navigator.mediaDevices.getUserMedia({ audio: true })
   const analyser = audioCtx.createAnalyser();
 
   mic.connect(analyser);
+
   const data = new Uint8Array(analyser.frequencyBinCount);
 
   function detect() {
     analyser.getByteFrequencyData(data);
+
     let volume = data.reduce((a,b)=>a+b) / data.length;
 
+    // blow threshold
     if (volume > 25) {
-      flames.forEach(f => f.style.opacity = "0");
+      flames.forEach(f => {
+        f.style.opacity = "0";
+        f.style.transform = "scale(0)";
+      });
     }
 
     requestAnimationFrame(detect);
   }
 
   detect();
+})
+.catch(() => {
+  alert("Please allow microphone access to blow the candles 🎤");
 });
 
 /* BALLOONS */
-for (let i = 0; i < 15; i++) {
+for (let i = 0; i < 18; i++) {
   let b = document.createElement("div");
   b.className = "balloon";
   b.style.left = Math.random() * 100 + "%";
